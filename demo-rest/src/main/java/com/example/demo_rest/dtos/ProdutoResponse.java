@@ -1,21 +1,26 @@
 package com.example.demo_rest.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class ProdutoRequest {
-    @NotBlank
+public class ProdutoResponse {
+    private Long id;
     private String nome;
-    @NotBlank
     private String fabricante;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate validade;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;

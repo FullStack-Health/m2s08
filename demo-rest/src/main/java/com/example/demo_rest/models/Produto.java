@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDate;
+
 @Entity
 public class Produto {
 
@@ -14,7 +16,7 @@ public class Produto {
 
     private String nome;
     private String fabricante;
-    private String validade;
+    private LocalDate validade;
 
     public Long getId() {
         return id;
@@ -40,11 +42,11 @@ public class Produto {
         this.fabricante = fabricante;
     }
 
-    public String getValidade() {
+    public LocalDate getValidade() {
         return validade;
     }
 
-    public void setValidade(String validade) {
+    public void setValidade(LocalDate validade) {
         this.validade = validade;
     }
 }
