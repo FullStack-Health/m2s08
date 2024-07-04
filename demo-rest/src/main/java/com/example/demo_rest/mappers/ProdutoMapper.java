@@ -42,6 +42,7 @@ public class ProdutoMapper {
   }
 
   public static Page<ProdutoResponse> map(Page<Produto> source) {
-    // TODO
+    // return source.map(produto -> map(produto));
+    return source.map(ProdutoMapper::map);
   }
 }

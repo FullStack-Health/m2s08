@@ -7,6 +7,7 @@ import com.example.demo_rest.dtos.ProdutoRequest;
 import com.example.demo_rest.dtos.ProdutoResponse;
 import com.example.demo_rest.models.Produto;
 import com.example.demo_rest.repositories.ProdutoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +22,11 @@ public class ProdutoService {
     this.repository = produtoRepository;
   }
 
-  public void cadastra(ProdutoRequest produtoRequest) {
+  public Produto cadastra(ProdutoRequest produtoRequest) {
 
     Produto produto = map(produtoRequest);
 
-    repository.save(produto);
+    return repository.save(produto);
   }
 
   public void atualiza(ProdutoRequest produtoRequest, Long id) {
@@ -37,22 +38,14 @@ public class ProdutoService {
 
       repository.save(produto);
     } else {
-      // TODO: retorna 404
+      throw new EntityNotFoundException();
     }
   }
 
   public ProdutoResponse busca(Long id) {
-    // TODO: converter model para dto
     Optional<Produto> produtoOptional = repository.findById(id);
 
-    if (produtoOptional.isEmpty()) {
-      // TODO: retornar 404
-      return null;
-    } else {
-      Produto produto = produtoOptional.get();
-      ProdutoResponse response = map(produto);
-      return response;
-    }
+    return map(produtoOptional.orElseThrow(EntityNotFoundException::new));
   }
 
   public Page<ProdutoResponse> lista(ProdutoGetRequest filtros, Pageable paginacao) {
@@ -62,5 +55,9 @@ public class ProdutoService {
     return map(
         repository.findByNomeContainingIgnoreCaseAndFabricanteContainingIgnoreCase(
             filtroNome, filtroFabricante, paginacao));
+  }
+
+  public void exclui(Long id) {
+    repository.deleteById(id);
   }
 }
