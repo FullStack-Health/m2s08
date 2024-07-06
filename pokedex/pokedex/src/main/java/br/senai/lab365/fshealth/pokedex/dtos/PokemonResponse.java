@@ -1,34 +1,15 @@
-package br.senai.lab365.fshealth.pokedex.models;
+package br.senai.lab365.fshealth.pokedex.dtos;
 
 import br.senai.lab365.fshealth.pokedex.enums.TipoEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "pokemon")
-public class Pokemon {
-  @Id private Integer numero;
-
-  @Column(nullable = false, unique = true)
+public class PokemonResponse {
+  private Integer numero;
   private String nome;
-
   private String descricao;
-
-  @Column(nullable = false)
   private String imagemUrl;
-
-  @Enumerated(value = EnumType.STRING)
   private TipoEnum tipo;
-
   private String categoria;
-
-  @Column(nullable = false)
   private String habitat;
-
   private Double altura;
   private Double peso;
   private boolean capturado;
