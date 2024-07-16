@@ -3,6 +3,8 @@ package br.senai.lab365.fshealth.pokedex.exceptions;
 import br.senai.lab365.fshealth.pokedex.exceptions.dtos.ErroResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class TratadorDeErros {
+
+  private static final Logger LOGGER = LogManager.getLogger(TratadorDeErros.class);
 
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<Void> trataEntidadeNaoEncontrada() {
@@ -27,6 +31,8 @@ public class TratadorDeErros {
     erro.setCampo("numero");
     erro.setMensagem(exception.getMessage());
 
+    LOGGER.error("Chave duplicada.", exception);
+
     return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
   }
 
@@ -36,6 +42,9 @@ public class TratadorDeErros {
     List<FieldError> fieldErrors = exception.getFieldErrors();
 
     List<ErroResponse> responseList = fieldErrors.stream().map(ErroResponse::new).toList();
+
+    responseList.forEach(
+        errorResponse -> LOGGER.warn("campo obrigatório faltando: {} ", errorResponse.getCampo()));
 
     return ResponseEntity.badRequest().body(responseList);
   }

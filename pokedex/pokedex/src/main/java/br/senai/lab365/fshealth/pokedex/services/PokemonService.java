@@ -11,12 +11,15 @@ import br.senai.lab365.fshealth.pokedex.models.Pokemon;
 import br.senai.lab365.fshealth.pokedex.repositories.PokemonRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PokemonService {
 
+  private static final Logger LOGGER = LogManager.getLogger(PokemonService.class);
   private final PokemonRepository repository;
 
   public PokemonService(PokemonRepository pokemonRepository) {
@@ -26,7 +29,9 @@ public class PokemonService {
   public void cadastraVisto(PokemonVistoRequest pokemonVistoRequest) {
 
     if (repository.existsById(pokemonVistoRequest.getNumero())) {
-      throw new DuplicateKeyException("já existe um pokemon com esse número");
+      throw new DuplicateKeyException(
+          String.format(
+              "já existe um pokemon com esse número: %d", pokemonVistoRequest.getNumero()));
     }
     repository.save(map(pokemonVistoRequest));
   }
@@ -37,6 +42,11 @@ public class PokemonService {
       throw new EntityNotFoundException();
     }
     repository.save(map(pokemonCapturadoRequest));
+
+    LOGGER.info(
+        "Pokémon capturado! Nome: {}, número: {}",
+        pokemonCapturadoRequest.getNome(),
+        pokemonCapturadoRequest.getNumero());
   }
 
   public void atualizaVisto(PokemonVistoRequest pokemonVistoRequest) {
